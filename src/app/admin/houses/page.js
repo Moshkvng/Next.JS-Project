@@ -1,39 +1,16 @@
 
 "use client";
 import AdminSidebar from "@/app/components/sidebar/page";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { TfiTrash } from "react-icons/tfi";
-import { GrEdit } from "react-icons/gr";
 
 export default function Houses() {
 
-    const [name, setName] = useState("");
-    const [images, setImages] = useState([]);
-    const [price, setPrice] = useState("");
-    const [city, setCity] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [type, setType] = useState("");
-    const [bedroom, setBedroom] = useState("");
-    const [address, setAddress] = useState("");
-    const [state, setState] = useState("");
-    const [country, setCountry] = useState("");
-    const [propertyUse, setPropertyUse] = useState("");
-    const [amenities, setAmenities] = useState([]);
-
     const [properties, setProperties] = useState([]);
-
-    const [id, setId] = useState("");
-    const [modal, setModal] = useState(false);
-
 
     const getProperties = async () => {
         const token = localStorage.getItem("token");
-
         try {
-
             const agentResp = await fetch(
                 "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
                 {
@@ -42,13 +19,10 @@ export default function Houses() {
                     },
                 }
             );
-
             const agentData = await agentResp.json();
-
             const agents = Array.isArray(agentData.data)
                 ? agentData.data
                 : [];
-
             const requests = agents.map((agent) =>
                 fetch(
                     `http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}&verified=true`,
@@ -80,79 +54,6 @@ export default function Houses() {
         getProperties();
     }, []);
 
-
-    const deleteProperty = async (id) => {
-        let ask = confirm("Do you want to delete this property?");
-        if (!ask) return
-
-        try {
-            const resp = await fetch(
-                `http://property.reworkstaging.name.ng/v1/properties/:${propertiesId}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        "content-type": "application/json",
-                        authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            const data = await resp.data;
-            if (data.id) {
-                alert("Property deleted successfully!");
-            }
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const triggerModal = (data) => {
-        setId(data.id);
-        setModal(true);
-
-        setName(data.name || "");
-        setImages(data.images || []);
-        setPrice(data.price || "");
-        setCity(data.city || "");
-        setDescription(data.description || "");
-        setCategory(data.category || "");
-        setType(data.type || "");
-        setBedroom(data.bedroom || "");
-        setAddress(data.address || "");
-        setState(data.state || "");
-        setCountry(data.country || "");
-        setPropertyUse(data.property_use || "");
-        setAmenities(data.amenities || []);
-    };
-
-    const updateProperty = async (e) => {
-        e.preventDefault();
-
-        try {
-            const propertyDetails = {
-                name: name,
-                price: price,
-                city: city,
-                type: type,
-                description: description,
-                category: category,
-                bedroom: bedroom,
-                images: images,
-                address: address,
-                state: state,
-                country: country,
-                property_use: propertyUse,
-                amenities: [],
-                agent: agentId
-            }
-
-            const resp = await fetch("")
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
 
     return (
         <div className="min-h-screen bg-teal-900 md:flex">
@@ -223,6 +124,7 @@ export default function Houses() {
                                 <tr className="border-b border-teal-700 text-[#A8A476]">
                                     <th className="p-3">S/N</th>
                                     <th className="p-3">House</th>
+                                    <th className="p-3">Agent</th>
                                     <th className="p-3">Location</th>
                                     <th className="p-3">Category</th>
                                     <th className="p-3">Price</th>
@@ -236,6 +138,7 @@ export default function Houses() {
                                     <tr key={item.id} className="border-b border-teal-800">
                                         <td className="p-3">{index + 1}</td>
                                         <td className="p-3">{item.name}</td>
+                                        <td className="p-3">{item.agent}</td>
                                         <td className="p-3">{item.city}</td>
                                         <td className="p-3">{item.category}</td>
                                         <td className="p-3">₦{item.price}</td>
@@ -258,59 +161,6 @@ export default function Houses() {
                                 ))}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {properties.length > 0 ? (
-                            properties.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="shadow-lg rounded-lg border border-gray-200 p-4 bg-white"
-                                >
-                                    <div className="rounded-lg bg-gray-100 mb-3 overflow-hidden">
-                                        {item.image || (item.images && item.images[0]) ? (
-                                            <img
-                                                src={item.image || item.images[0]}
-                                                alt={item.name}
-                                                className="w-full h-50 object-conver"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-40 flex items-center justify-center text-gray-400 text-sm">
-                                                No image
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <h2 className="text-lg font-medium mb-2">{item.name}</h2>
-                                    <p className="text-gray-500 text-sm mb-2 line-clamp-2">
-                                        {item.description}
-                                    </p>
-                                    <h3 className="text-xl font-bold mb-3">₦{item.price}</h3>
-                                    <p className="text-sm text-teal-500 font-bold mb-3">
-                                        {item.category}
-                                    </p>
-
-                                    <div className="flex gap-2">
-                                        <button
-                                            type="button"
-                                            className="bg-blue-300 hover:bg-blue-900 text-white px-3 py-2 rounded-md transition"
-                                            onClick={() => triggerModal(item)}>
-                                            <GrEdit className="text-green-500" />
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className="bg-red-100 hover:bg-red-300 px-3 py-2 rounded-md transition"
-                                            onClick={() => deleteProperty(item.id)}
-                                        >
-                                            <TfiTrash className="text-red-500" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
-                        ) : null}
                     </div>
                 </div>
             </main>

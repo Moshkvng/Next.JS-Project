@@ -254,8 +254,7 @@ export default function Houses() {
                         properties.map((item) => (
                             <div
                                 key={item.id}
-                                className="rounded-lg border border-gray-200 bg-white p-4 shadow-lg"
-                            >
+                                className="rounded-lg border border-gray-200 bg-white p-4 shadow-lg">
                                 <div className="mb-3 overflow-hidden rounded-lg bg-gray-100">
                                     {item.image || (item.images && item.images[0]) ? (
                                         <img
@@ -321,7 +320,7 @@ export default function Houses() {
                             </div>
                         ))
                     ) : (
-                        <p className="col-span-full text-[#A8A476]">No properties found</p>
+                        <p className="col-span-full text-[#A8A476]">Properties loading, please wait...</p>
                     )}
                 </div>
 

@@ -2,6 +2,8 @@
 import Nav from "@/app/components/Nav";
 import Link from "next/link";
 import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 
 export default function () {
@@ -15,26 +17,43 @@ export default function () {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^(?:\+234\d{10}|0\d{10}|\d{11})$/;
 
+    const router = useRouter();
+
     const submitForm = async (e) => {
         e.preventDefault ();
         if (firstName == "" || lastName == "" || email=="" || phone == "" || password == "" || !emailRegex.test(email) || phone == "" || !phoneRegex.test(phone.replace(/\s/g, "")) || password.length < 8 ) {
         setErrorCheck(true);
         return
         }
-    }   
-    //     try {
-    //     const Merchant = {
-    //     first_name: firstName,
-    //     last_name: lastName,
-    //     email: email,
-    //     phone: phone,
-    //     store_name: "Walmart",
-    //     descp: location,
-    //     password: password,
-    //     };
-    // } catch (err) {
-    // console.log(err);
-    // }
+
+        try {
+            const User = {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone: phone,    
+                password: password
+            }
+
+            const resp = await axios.post ("http://property.reworkstaging.name.ng/v1/users",
+                User
+            );
+
+            if (resp.data?.type == "EXISTS" || resp.data?.code == 304) {
+            alert("Email or phone already exists");
+                return;
+            }
+
+
+            if (resp.data?.id || resp.data?.data?.id) {
+            console.log("Full response:", resp.data);
+            alert("User created successfully");
+            router.push("/login");
+            }
+        } catch (err) {
+            console.log (err);
+        }
+    };
     
 
     return (

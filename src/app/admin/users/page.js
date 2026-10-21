@@ -1,7 +1,43 @@
+
+"use client"
 import Link from "next/link";
 import AdminSidebar from "@/app/components/sidebar/page";
+import { useEffect, useState } from "react";
 
 export default function Users() {
+    const [users, setUsers] = useState([]);
+
+    const getUsers = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const resp = await fetch(
+                "http://property.reworkstaging.name.ng/v1/users?limit=5&page=2",
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const data = await resp.json();
+            console.log("USERS:", data);
+
+            const userList = Array.isArray(data.data)
+                ? data.data
+                : [];
+            setUsers(userList);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+
     return (
         <div className="min-h-screen bg-teal-900 md:flex">
             <AdminSidebar activePage="Users" />
@@ -32,24 +68,30 @@ export default function Users() {
                         <table className="w-full text-left text-[#BBBBAC]">
                             <thead>
                                 <tr className="border-b border-teal-700 text-[#A8A476]">
+                                    <th className="p-3">S/N</th>
                                     <th className="p-3">ID</th>
-                                    <th className="p-3">Full Name</th>
+                                    <th className="p-3">First Name</th>
+                                    <th className="p-3">Last Name</th>
                                     <th className="p-3">Email</th>
+                                    <th className="p-3">Phone</th>
+                                    <th className="p-3">Password</th>
                                     <th className="p-3">Status</th>
-                                    <th className="p-3">Action</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <tr className="border-b border-teal-800">
-                                    <td className="p-3">1</td>
-                                    <td className="p-3">User Name</td>
-                                    <td className="p-3">user@example.com</td>
-                                    <td className="p-3">Active</td>
-                                    <td className="p-3">
-                                        <button className="text-teal-500">View</button>
-                                    </td>
-                                </tr>
+                                {users.map((item, index) => (
+                                    <tr key={item.id} className="border-b border-teal-800">
+                                        <td className="p-3">{index + 1}</td>
+                                        <td className="p-3">{item.Id}</td>
+                                        <td className="p-3">{item.first_name}</td>
+                                        <td className="p-3">{item.last_name}</td>
+                                        <td className="p-3">{item.email}</td>
+                                        <td className="p-3">{item.phone}</td>
+                                        <td className="p-3">{item.password}</td>
+                                        <td className="p-3">Active</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>

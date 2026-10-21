@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import Nav from "../components/Nav";
 
 
@@ -10,16 +12,51 @@ export default function () {
     const [email, setEmail] = useState("");
     const [errorCheck, setErrorCheck] = useState(false);
     const [loginError, setLoginError] = useState("");
+    const router = useRouter();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const submitForm = async (e) => {
-        e.preventDefault ();
-        if (email=="" ||  password == "" || !emailRegex.test(email) || password.length < 8 ) {
+        e.preventDefault();
+        setLoginError("");
         setErrorCheck(true);
-        return
+
+
+        if (email == "" || password == "" || !emailRegex.test(email) || password.length < 8 ) {
+            return;
         }
-    } 
+
+        try {
+            const User = {
+                email: email,
+                password: password,
+            };
+
+            const resp = await axios.post(
+                "http://property.reworkstaging.name.ng/v1/auth/login",
+                User
+            );
+            
+            console.log(resp.data)
+
+            if (resp.data?.type === "SUCCESS" || resp.data?.code === 200) {
+                localStorage.setItem("userId", resp.data.data.id);
+                localStorage.setItem("token", resp.data.data.token);  
+                localStorage.setItem("role", resp.data.data.role);
+
+                alert("Login successful");
+                router.push("/properties");
+            } 
+            
+                else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
+                alert ("Token expired, re-login")
+            } else {
+                setLoginError("Wrong email or password");
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
         <div className="bg-white">

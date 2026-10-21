@@ -1,4 +1,8 @@
 
+"use client";
+import AdminSidebar from "@/app/components/sidebar/page";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
@@ -7,6 +11,45 @@ import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function () {
+    
+        const [properties, setProperties] = useState([]);
+        const [id, setId] = useState("");
+    
+        const getProperties = async () => {
+            const token = localStorage.getItem("token");
+    
+            try {
+    
+                const agentResp = await fetch(
+                    "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
+                    {
+                        headers: {
+                            authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+    
+                const results = await Promise.all(requests);
+    
+                const allProperties = results.flatMap((result) =>
+                    Array.isArray(result.data) ? result.data : []
+                );
+    
+                console.log(allProperties);
+    
+                setProperties(allProperties);
+    
+            } catch (err) {
+                console.log(err);
+            }
+        };
+    
+    
+        useEffect(() => {
+            getProperties();
+        }, []);
+
+
     return (
         <div className="bg-gray-100">
             <h2 className="text-2xl text-gray-500 text-center p-5">This is the shop Page</h2>

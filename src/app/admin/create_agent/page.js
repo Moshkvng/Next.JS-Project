@@ -51,11 +51,12 @@ export default function () {
             const data = await resp.json();
 
             console.log(data);
+            const agentId = data.data.id;
 
             if (imageFiles.length > 0) {
                 const formData = new FormData();
                 imageFiles.forEach((file) => {
-                    formData.append("images", file);
+                    formData.append("avatar", imageFiles[0]);
                 });
 
                 const imageResp = await fetch(

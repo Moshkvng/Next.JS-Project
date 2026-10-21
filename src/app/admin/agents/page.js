@@ -11,7 +11,6 @@ export default function Agents() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         const fetchAgent = async () => {
             const token = localStorage.getItem("token");
             try {
@@ -23,11 +22,20 @@ export default function Agents() {
                         },
                     }
                 );
-                const data = await resp.json();
-                setAgent(data.data || data);
 
+                const data = await resp.json();
+                console.log("Agents response:", data);
+
+                const list = Array.isArray(data.data)
+                    ? data.data
+                    : Array.isArray(data)
+                        ? data
+                        : [];
+
+                setAgent(list);
             } catch (err) {
                 console.error(err);
+                setAgent([]);
             } finally {
                 setLoading(false);
             }
@@ -35,8 +43,6 @@ export default function Agents() {
 
         fetchAgent();
     }, []);
-
-
     const verifyAgent = async (agentId) => {
         let ask = confirm("Do you want to Verify this agent?");
         if (!ask) return
@@ -75,8 +81,11 @@ export default function Agents() {
         let ask = confirm("Do you want to delete this agent profile?");
         if (!ask) return;
 
+        const token = localStorage.getItem("token");
+
         try {
-            const resp = await fetch("http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=10",
+            const resp = await fetch(
+                "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=10",
                 {
                     method: "DELETE",
                     headers: {
@@ -86,16 +95,14 @@ export default function Agents() {
                 }
             );
 
-            console.log(data);
-            const data = await resp.data;
+            const data = await resp.json();
 
-            if (data.id) {
-                alert("Agent deleted successfully!");
-            }
+            console.log(data);
+
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-    }
+    };
 
 
     return (
@@ -132,25 +139,27 @@ export default function Agents() {
                                     <tr className="border-b border-teal-700 text-[#A8A476]">
                                         <th className="p-3">S/N</th>
                                         <th className="p-3">ID</th>
+                                        <th className="p-3">Image</th>
                                         <th className="p-3">Full Name</th>
                                         <th className="p-3">Email</th>
                                         <th className="p-3">Phone</th>
                                         <th className="p-3">Status</th>
                                         <th className="p-3">Action</th>
-                                        <th className="p-3">Details</th>
+                                        <th className="p-3">Profile</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {agent.map((item, index) => (
+                                    {(Array.isArray(agent) ? agent : []).map((item, index) => (
                                         <tr key={item.id || index} className="border-b border-teal-800">
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">{item.id}</td>
+                                            <td className="p-3">{item.image}</td>
                                             <td className="p-3">
                                                 {item.full_name || item.name}
                                             </td>
                                             <td className="p-3">{item.email}</td>
-                                            <td className="p-3">{item.primary_phone || item.phone}</td>
+                                            <td className="p-3">{item.primary_phone}</td>
                                             <td className="p-3">
                                                 {item.is_verified ? (
                                                     <span className="rounded-full bg-green-200 px-3 py-1 text-xs text-green-900">
@@ -164,6 +173,13 @@ export default function Agents() {
                                             </td>
                                             <td className="p-3">
                                                 <div className="flex gap-3">
+                                                    <button
+                                                        type="button"
+                                                        className="text-teal-200 cursor-pointer bg-red-700 hover:bg-red-900 rounded-lg px-3"
+                                                        onClick={() => deleteAgent(item.id)}
+                                                    >
+                                                        Delete
+                                                    </button>
                                                     {!item.is_verified && (
                                                         <button
                                                             type="button"
@@ -173,13 +189,6 @@ export default function Agents() {
                                                             Verify
                                                         </button>
                                                     )}
-                                                    <button
-                                                        type="button"
-                                                        className="text-teal-200 cursor-pointer bg-red-700 hover:bg-red-900 rounded-lg px-3"
-                                                        onClick={() => deleteAgent(item.id)}
-                                                    >
-                                                        Delete
-                                                    </button>
                                                 </div>
                                             </td>
                                             <td className="p-3">
