@@ -1,4 +1,5 @@
 import Image from "next/image";
+<<<<<<< HEAD
 
 export default function Home() {
   return (
@@ -64,6 +65,15 @@ export default function Home() {
           </a>
         </div>
       </main>
+=======
+import Nav from "./components/Nav";
+
+export default function Home() {
+  return (
+    <div>
+      <Nav/>
+      <h1 className="text-2xl p-5 font-semibold bg-teal-200 text-gray-500">Welcome to Next JS Class</h1>
+>>>>>>> d4c5678d1bba41c36f9c351dfd1f8df4d099a8ed
     </div>
   );
 }
