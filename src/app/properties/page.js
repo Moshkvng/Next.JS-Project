@@ -70,7 +70,6 @@ export default function () {
     return (
         <div className="bg-gray-100">
             <Nav />
-            <h2 className="text-2xl text-gray-500 text-center p-5">This is the shop Page</h2>
             <div className="w-[95%] mx-auto p-5 shadow-md bg-white mb-10">
                 <div>
                     <hr className="text-gray-300 py-5" />
