@@ -47,7 +47,7 @@ export default function () {
             );
 
             const results = await Promise.all(requests);
-            
+
             const allProperties = results.flatMap((result) =>
                 Array.isArray(result.data) ? result.data : []
             );
@@ -100,34 +100,36 @@ export default function () {
             </div>
 
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150 gap-5 grid grid-cols-[70%_30%]">
-                <div className="grid grid-cols-2 gap-5">
-                    {properties.length > 0 ? (
-                        properties.map((item) => (
+                <div>
+                    <div className="grid grid-cols-2 gap-5">
+                        {properties.length > 0 ? (
+                            properties.map((item) => (
 
-                            <div key={item.id} className="rounded-lg shadow-md bg-white">
-                                <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
-                                    <p className="text-orange-500">PREMIUM PLUS</p>
-                                    <p className="text-green-500">Top listing</p>
-                                </div>
-                                <img
-                                            src={item.image || item.images[0]}
-                                            alt={item.name}
-                                            className="h-48 w-full object-cover"
-                                        />
-                                <div className="p-5">
-                                    <p className="text-3xl">${item.price}</p>
-                                    <p className="text-red-500 text-sm">Stand alone mansion</p>
-                                    <p className="text-2xl text-green-600">{item.name}</p>
-                                    <p className="text-2xl text-gray-500 py-3">{item.description}</p>
-                                    <div className="flex">
-                                        <FaLocationDot className="text-gray-500 mt-1" />
-                                        <p className="text-sm text-gray-400 pl-1">{item.city}, Abuja</p>
+                                <Link href={`/properties/${item.id}`} key={item.id} className="rounded-lg shadow-md bg-white">
+                                    <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
+                                        <p className="text-orange-500">PREMIUM PLUS</p>
+                                        <p className="text-green-500">Top listing</p>
                                     </div>
-                                </div>
-                            </div>
+                                    <img
+                                        src={item.image || item.images[0]}
+                                        alt={item.name}
+                                        className="h-48 w-full object-cover"
+                                    />
+                                    <div className="p-5">
+                                        <p className="text-3xl">${item.price}</p>
+                                        <p className="text-red-500 text-sm">Stand alone mansion</p>
+                                        <p className="text-2xl text-green-600">{item.name}</p>
+                                        <p className="text-2xl text-gray-500 py-3">{item.description}</p>
+                                        <div className="flex">
+                                            <FaLocationDot className="text-gray-500 mt-1" />
+                                            <p className="text-sm text-gray-400 pl-1">{item.city}, Abuja</p>
+                                        </div>
+                                    </div>
+                                </Link>
 
-                        ))
-                    ) : (<p>Properties Loading, please wait...</p>)}
+                            ))
+                        ) : (<p>Properties Loading, please wait...</p>)}
+                    </div>
                 </div>
 
                 <div className="bg-gray-100">

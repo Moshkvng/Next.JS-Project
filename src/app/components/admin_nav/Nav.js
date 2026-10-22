@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Nav() {
     return (
         <nav className="flex justify-between items-center gap-5 p-5 shadow-sm bg-teal-900 text-lg text-white font-bold">
-            <Link href="/admin">
+            <Link href="/admin/dashboard">
                 <img className="rounded-full" src="/logo.jpg" alt="Logo" width={150} />
             </Link>
             <ul className="flex">

@@ -142,7 +142,6 @@ export default function Agents() {
                                         <th className="p-3">Image</th>
                                         <th className="p-3">Full Name</th>
                                         <th className="p-3">Email</th>
-                                        <th className="p-3">Phone</th>
                                         <th className="p-3">Status</th>
                                         <th className="p-3">Action</th>
                                         <th className="p-3">Profile</th>
@@ -159,7 +158,6 @@ export default function Agents() {
                                                 {item.full_name || item.name}
                                             </td>
                                             <td className="p-3">{item.email}</td>
-                                            <td className="p-3">{item.primary_phone}</td>
                                             <td className="p-3">
                                                 {item.is_verified ? (
                                                     <span className="rounded-full bg-green-200 px-3 py-1 text-xs text-green-900">
