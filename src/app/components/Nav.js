@@ -36,7 +36,7 @@ export default function Nav() {
                         <Link href="/" className="hover:text-blue-400 hover:border-b-2 hover:border-blue pb-3  ">Contact</Link>
                     </li>
                     <li>
-                        <Link href="/" className="hover:text-blue-400 hover:border-b-2 hover:border-blue pb-3  ">Properties</Link>
+                        <Link href="/properties" className="hover:text-blue-400 hover:border-b-2 hover:border-blue pb-3  ">Properties</Link>
                     </li>
                     <li>
                         <Link href="/" className="hover:text-blue-400 hover:border-b-2 hover:border-red pb-3  "> <FiSearch className="h-6 w-6" /> </Link>

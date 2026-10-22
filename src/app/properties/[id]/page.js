@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
@@ -11,10 +11,8 @@ import { FaLocationDot } from "react-icons/fa6";
 export default function () {
 
     const { id } = useParams();
+    const router = useRouter();
     const [property, setProperty] = useState({});
-
-
-
 
     useEffect(() => {
         const getProperty = async () => {
@@ -44,6 +42,17 @@ export default function () {
         getProperty();
     }, [id]);
 
+    // Function to link to appointment page passing property data
+    const handleBookAppointment = () => {
+        const propId = property.id || property._id;
+        if (!propId) return;
+
+        router.push(
+            `/appointmentpage?propertyId=${propId}&propertyName=${encodeURIComponent(
+                property.name || ""
+            )}`
+        );
+    };
 
     return (
         <div className="bg-gray-100">
@@ -93,7 +102,12 @@ export default function () {
                             </div>
                             <p className="font-bold text-teal-600 text-xl px-5">Or</p>
                             <div className="m-2">
-                                <button className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg">BOOK AN APPOINTMENT</button>
+                                <button 
+                                    onClick={handleBookAppointment}
+                                    className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg cursor-pointer"
+                                >
+                                    BOOK AN APPOINTMENT
+                                </button>
                             </div>
                         </div>
                     </div>

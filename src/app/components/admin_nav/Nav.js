@@ -12,7 +12,7 @@ export default function Nav() {
                     <Link href="/about"></Link>
                 </li>
                 <li>
-                    <Link className="rounded-lg bg-teal-700 px-3 py-2" href="/admin/login">👤Signin</Link>
+                    <Link href="/login" className="rounded-lg bg-teal-700 px-3 py-2" >👤Signin</Link>
                 </li>
             </ul>
         </nav>
