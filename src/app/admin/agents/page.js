@@ -153,7 +153,7 @@ export default function Agents() {
                                         <tr key={item.id || index} className="border-b border-teal-800">
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">{item.id}</td>
-                                            <td className="p-3">{item.image}</td>
+                                            <td className="p-3">{item.avatar}</td>
                                             <td className="p-3">
                                                 {item.full_name || item.name}
                                             </td>
@@ -220,11 +220,11 @@ export default function Agents() {
                                 </button>
                             </div>
                             <div className="flex gap-4">
-                                {modal.image && (
+                                {modal.avatar && (
                                     <img
-                                        src={modal.image}
+                                        src={modal.avatar}
                                         alt=""
-                                        className="h-24 w-24 rounded-full object-cover"
+                                        className="h-50 w-50 rounded-full object-cover"
                                     />
                                 )}
                                 <div>

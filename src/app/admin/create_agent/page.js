@@ -53,11 +53,17 @@ export default function () {
             console.log(data);
             const agentId = data.data.id;
 
+            if (agentId) {
+                alert("Agent created successfully!");
+                firstName == "";
+                email == "";
+                phone == "";
+                password == "";
+            }
+
             if (imageFiles.length > 0) {
                 const formData = new FormData();
-                imageFiles.forEach((file) => {
-                    formData.append("avatar", imageFiles[0]);
-                });
+                formData.append("avatar", imageFiles[0]);
 
                 const imageResp = await fetch(
                     `http://property.reworkstaging.name.ng/v1/agents/${agentId}/resource`,
@@ -77,7 +83,7 @@ export default function () {
                 if (!imageResp.ok) {
                     alert("Failed to create Agent");
                 } else {
-                    alert("Agent created successfully")
+                    alert("Agent image added successfully")
                 }
             }
 
@@ -101,10 +107,9 @@ export default function () {
                     <input
                         type="file"
                         accept="image/*"
-                        multiple
                         onChange={(e) => {
-                            const files = Array.from(e.target.files || []).slice(0, 5);
-                            setImageFiles(files);
+                            const file = e.target.files?.[0];
+                            setImageFiles(file ? [file] : []);
                         }}
                         className="w-full rounded-lg border border-teal-700 bg-teal-900 p-3 text-[#BBBBAC]"
                     />
