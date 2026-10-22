@@ -1,7 +1,7 @@
 
 "use client"
 import Link from "next/link";
-import AdminSidebar from "@/app/components/sidebar/page";
+import AdminSidebar from "@/app/components/sidebar/sidebar";
 import { useEffect, useState } from "react";
 
 export default function Users() {

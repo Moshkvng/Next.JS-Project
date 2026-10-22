@@ -1,6 +1,6 @@
 
 "use client";
-import AdminSidebar from "@/app/components/sidebar/page";
+// import AdminSidebar from "@/app/components/sidebar/page";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";

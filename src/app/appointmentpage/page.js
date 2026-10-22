@@ -49,11 +49,10 @@ export default function SimpleAppointmentPage() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: SIMPLE WIDE FORM */}
           <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
             <form action="/api/appointments" method="POST" className="space-y-6">
               
-              {/* DATE & TIME WINDOW GRID */}
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
                 <div>
@@ -105,7 +104,7 @@ export default function SimpleAppointmentPage() {
 
               </div>
 
-              {/* MESSAGE AREA */}
+
               <div>
                 <label htmlFor="msg" className="block text-xs font-bold text-gray-700 mb-2">
                   Message for Agent (Optional)
@@ -119,7 +118,7 @@ export default function SimpleAppointmentPage() {
                 ></textarea>
               </div>
 
-              {/* SUBMIT BUTTON */}
+
               <div className="pt-2 flex justify-end">
                 <button 
                   type="submit" 

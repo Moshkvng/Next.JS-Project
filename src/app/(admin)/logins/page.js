@@ -45,7 +45,7 @@ export default function () {
                 localStorage.setItem("role", resp.data.data.role);
 
                 alert("Login successful");
-                router.push("/admin");
+                router.push("/adminpanel");
             } 
             
                 else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {

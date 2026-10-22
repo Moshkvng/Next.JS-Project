@@ -1,5 +1,5 @@
 "use client";
-import AdminSidebar from "@/app/components/sidebar/page";
+import AdminSidebar from "@/app/components/sidebar/sidebar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TfiTrash } from "react-icons/tfi";

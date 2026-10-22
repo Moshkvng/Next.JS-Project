@@ -1,8 +1,10 @@
 "use client";
-import Nav from "@/app/components/admin_nav/Nav";
+// import Nav from "@/app/components/admin_nav/Nav";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Nav from "@/app/components/Nav";
+import Footer from "@/app/components/Footer";
 
 
 export default function () {
@@ -46,7 +48,7 @@ export default function () {
             if (resp.data?.id || resp.data?.data?.id) {
             console.log("Full response:", resp.data);
             alert("Merchant created successfully");
-            router.push("/admin/login");
+            router.push("/logins");
             }
         } catch (err) {
             console.log (err);
@@ -55,7 +57,7 @@ export default function () {
 
     return (
         <div className="bg-teal-900">
-            <Nav/>
+           <Nav />
             <div className="mx-auto my-10 w-[35%] border border-5 border-teal-500 p-10 rounded-lg">
                 <h3 className="text-xl text-[#A8A476] font-bold py-1 text-center">Create your <span className="text-teal-500">Boing</span> account</h3>
                 <div>
@@ -63,13 +65,13 @@ export default function () {
                 </div>
                 <div className="font-bold text-white pb-3">
                     <label htmlFor="Name">Full name*</label>
-                    <input className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                    <input className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
                     {errorCheck == true && fullName == "" ? <span className="text-red-500 text-sm">Full name required</span> : null}
                 </div>
                 <div className="font-bold text-white pb-3">
                     <label>Email*</label>
                     <input
-                        className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         {errorCheck && email === "" && (
                         <span className="text-red-500 text-sm">Email required</span>
                     )}
@@ -80,7 +82,7 @@ export default function () {
                 <div className="font-bold text-white pb-3">
                     <label>Phone number*</label>
                     <input
-                        className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg"
+                        className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg"
                         type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
                     {errorCheck && phone === "" && (
                         <span className="text-red-500 text-sm">Phone number required</span>
@@ -96,7 +98,7 @@ export default function () {
                 <div className="font-bold text-white pb-3">
                     <label>Create a password*</label>
                     <input
-                        className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     {errorCheck && password === "" && (
                         <span className="text-red-500 text-sm">Password required</span>
                     )}
@@ -109,6 +111,7 @@ export default function () {
 
                 <button className="rounded-full text-white bg-teal-500 py-2 px-35 mx-auto font-bold my-3 mb-5 cursor-pointer" onClick={submitForm}>Create Account</button>
             </div>
+            <Footer />
         </div>
     )
 }

@@ -1,6 +1,6 @@
 
 "use client";
-import AdminSidebar from "@/app/components/sidebar/page";
+// import AdminSidebar from "@/app/components/sidebar/sidebar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -57,7 +57,7 @@ export default function Houses() {
 
     return (
         <div className="min-h-screen bg-teal-900 md:flex">
-            <AdminSidebar activePage="View Houses" />
+            {/* <AdminSidebar activePage="View Houses" /> */}
 
             <main className="min-w-0 flex-1 p-5 md:p-8">
                 <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-teal-800 pb-5">

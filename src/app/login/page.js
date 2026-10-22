@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
+
 
 
 export default function () {
@@ -45,7 +47,7 @@ export default function () {
                 localStorage.setItem("role", resp.data.data.role);
 
                 alert("Login successful");
-                router.push("/properties");
+                router.push("/");
             } 
             
                 else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
@@ -60,17 +62,7 @@ export default function () {
 
     return (
         <div className="bg-white">
-            <nav className="flex justify-between items-center gap-5 p-5 shadow-sm bg-teal-900 text-lg text-white font-bold">
-                <h2>Logo</h2>
-                <ul className="flex gap-10">
-                    <li>
-                        <Link href="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link href="/account">Create account</Link>
-                    </li>
-                </ul>
-            </nav>
+            <Nav />
             <div className="mx-auto my-20 w-[35%] border border-5 border-blue-700 p-10 rounded-lg">
                 <div className="flex justify-center py-2">
 
@@ -84,7 +76,7 @@ export default function () {
                 <div className="font-bold pb-3">
                     <label>Email*</label>
                     <input
-                        className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     {errorCheck && email === "" && (
                         <span className="text-red-500 text-sm">Email required</span>
                     )}
@@ -96,7 +88,7 @@ export default function () {
                 <div className="font-bold pb-3">
                     <label>Password*</label>
                     <input
-                        className="w-full h-13 pt-1 shadow-md border border-gray-400 rounded-lg" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        className="w-full h-13 p-3 shadow-md border border-gray-400 rounded-lg" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     {errorCheck && password === "" && (
                         <span className="text-red-500 text-sm">Password required</span>
                     )}
@@ -109,10 +101,12 @@ export default function () {
                         <p className="text-red-500 text-sm mb-3">{loginError}</p>
                     )}
                 </div>
+              <Link href="/createuser" >  <p className="text-gray-400 text-xs">Dont't have an Account <span className="text-teal-500 text-xs underline">Create</span></p></Link>
                 <p className="text-xs text-gray-400">Securing your personal information is our priority. See our <u className="text-teal-500 cursor-pointer">Privacy measures</u></p>
 
                 <button className="rounded-full text-white bg-blue-700 py-2 px-40 font-bold my-3 mb-10 cursor-pointer" onClick={submitForm}>Signin</button>
             </div>
+            <Footer />
         </div>
     )
 }

@@ -1,10 +1,10 @@
-import AdminSidebar from "@/app/components/sidebar/page";
+// import AdminSidebar from "@/app/components/sidebar/sidebar";
 
 export default function Categories() {
 
     return (
         <div className="min-h-screen bg-teal-900 md:flex">
-            <AdminSidebar activePage="Categories" />
+            {/* <AdminSidebar activePage="Categories" /> */}
 
             <main className="min-w-0 flex-1 p-5 md:p-8">
                 <header className="mb-8 border-b border-teal-800 pb-5">

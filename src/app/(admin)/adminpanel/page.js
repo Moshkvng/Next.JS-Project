@@ -1,6 +1,6 @@
 "use client"
-import Nav from "@/app/components/admin_nav/Nav";
-import AdminSidebar from "@/app/components/sidebar/page";
+// import Nav from "@/app/components/admin_nav/Nav";
+// import AdminSidebar from "@/app/components/sidebar/page";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
@@ -95,9 +95,9 @@ export default function Dashboard() {
 
         <div>
             <div className="min-h-screen bg-teal-900 md:flex">
-                <AdminSidebar activePage="Dashboard" />
+                {/* <AdminSidebar activePage="Dashboard" /> */}
                 <main className="min-w-0 flex-1 p-5 md:p-8">
-                    <Nav />
+                    {/* <Nav /> */}
                     <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-teal-800 pb-5">
                         <div>
                             <h2 className="text-2xl font-bold text-teal-500">
