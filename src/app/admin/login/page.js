@@ -45,11 +45,13 @@ export default function () {
                 localStorage.setItem("role", resp.data.data.role);
 
                 alert("Login successful");
-                router.push("/admin");
+                router.push("/admin/dashboard/");
             } 
             
                 else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
                 alert ("Token expired, re-login")
+            } else if (resp.data?.status == 404) {
+                alert("Not found or Wrong password")
             } else {
                 setLoginError("Wrong email or password");
             }
