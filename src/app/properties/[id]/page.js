@@ -1,3 +1,6 @@
+"use client";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
@@ -6,6 +9,42 @@ import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function () {
+
+    const { id } = useParams();
+    const [property, setProperty] = useState({});
+
+
+
+
+    useEffect(() => {
+        const getProperty = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const resp = await fetch(
+                    `http://property.reworkstaging.name.ng/v1/properties/${id}`,
+                    {
+                        headers: {
+                            authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                const data = await resp.json();
+                const property = data.data || data;
+                
+                console.log(property)
+                if (property.id) {
+                    setProperty(property);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        getProperty();
+    }, [id]);
+
+
     return (
         <div className="bg-gray-100">
             <h2 className="text-2xl text-gray-500 text-center p-5">This is the Single House Page</h2>
@@ -34,29 +73,31 @@ export default function () {
                 </div>
             </div>
             <div className="w-[95%] mx-auto p-5 shadow-sm bg-gray-150 gap-5 grid grid-cols-[70%_30%]">
-
-                <div className="rounded-lg bg-gray-100 flex gap-5">
-                    <div className="rounded-lg">
-                        <img src="/images.jpg" alt="" />
+                {property.id ? (
+                    <div className="rounded-lg bg-gray-100 flex gap-5">
+                        <div className="rounded-lg">
+                            <img src={property.image} alt="" />
+                        </div>
+                        <div className="p-5">
+                            <p className="text-3xl">{property.price}</p>
+                            <p className="text-red-500 text-sm">Stand alone mansion</p>
+                            <p className="text-2xl text-teal-900">{property.name}</p>
+                            <p className="text-2xl text-gray-500 py-3 max-w-100">{property.description}</p>
+                            <p className="text-2xl text-gray-500 py-3 max-w-100">{[property.amenities]}</p>
+                            <div className="flex">
+                                <FaLocationDot className="text-gray-500 mt-1" />
+                                <p className="text-sm text-gray-400 pl-1">{property.city} District, Abuja</p>
+                            </div>
+                            <div className="m-2">
+                                <button className="px-3 py-1 cursor-pointer rounded-lg text-white bg-green-700">BUY</button>
+                            </div>
+                            <p className="font-bold text-teal-600 text-xl px-5">Or</p>
+                            <div className="m-2">
+                                <button className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg">BOOK AN APPOINTMENT</button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="p-5">
-                        <p className="text-3xl">$470,000,000</p>
-                        <p className="text-red-500 text-sm">Stand alone mansion</p>
-                        <p className="text-2xl text-teal-900">6 Bedroom mansion</p>
-                        <p className="text-2xl text-gray-500 py-3 max-w-100">A 6 bedroom mansion, Gusape, Abuja. An address that speaks for itself. with one of the best facilities in the world!</p>
-                        <div className="flex">
-                            <FaLocationDot className="text-gray-500 mt-1" />
-                            <p className="text-sm text-gray-400 pl-1">Gusape District, Abuja</p>
-                        </div>
-                        <div className="m-2">
-                            <button className="px-3 py-1 cursor-pointer rounded-lg text-white bg-green-700">BUY</button>
-                        </div>
-                        <p className="font-bold text-teal-600 text-xl px-5">Or</p>
-                        <div className="m-2">
-                            <button className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg">BOOK AN APPOINTMENT</button>
-                        </div>
-                    </div>
-                </div>
+                ) : (<p>Property loading, please wait...</p>)}
 
                 <div className="bg-gray-100">
                     <div className="bg-white p-2 mr-5 rounded-lg">

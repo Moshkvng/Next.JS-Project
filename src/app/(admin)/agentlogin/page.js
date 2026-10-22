@@ -5,30 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-const API =
-  process.env.NEXT_PUBLIC_API_URL || 'http://property.reworkstaging.name.ng/v1';
-
-// Finds the token whether it is data.access_token, data.token, etc.
-const extractToken = (res) => {
-  const d = res?.data;
-  if (typeof d === 'string') return d;
-  return (
-    d?.access_token ??
-    d?.token ??
-    d?.accessToken ??
-    d?.jwt ??
-    res?.access_token ??
-    res?.token
-  );
-};
-
-// This API can return HTTP 200 with a failure code inside the body
-const isFailure = (body) =>
-  (typeof body?.code === 'number' && body.code >= 300) ||
-  body?.type === 'EXISTS' ||
-  body?.type === 'NOT_EXIST' ||
-  body?.type === 'ERROR';
-
 export default function AgentLoginPage() {
   const router = useRouter();
 
@@ -74,65 +50,51 @@ export default function AgentLoginPage() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(`${API}/auth/login`, {
+      const response = await axios.post('http://property.reworkstaging.name.ng/v1/auth/login', {
         email: email.trim(),
-        password,
+        password: password,
       });
 
-      // TEMPORARY: check the real response shape, then remove this line
+      const data = response.data;
       console.log('Login response:', data);
 
-      if (isFailure(data)) {
-        setApiErr(data.msg || data.message || 'Invalid login credentials.');
-        return;
-      }
+      // Grab the token from the response
+      const token = data?.token || data?.access_token || data?.data?.token;
 
-      const token = extractToken(data);
       if (!token) {
         setApiErr('Login succeeded but no token was returned.');
         return;
       }
 
-      const info = data?.data && typeof data.data === 'object' ? data.data : data;
-      const role = (info?.role ?? info?.type ?? info?.user?.role ?? '')
-        .toString()
-        .toLowerCase();
-      const agentId = info?.id ?? info?._id ?? info?.user?.id ?? info?.user?._id ?? '';
+      // Grab the agent's name from wherever the backend puts it
+      const agentName = 
+        data?.full_name || 
+        data?.name || 
+        data?.agent?.full_name || 
+        data?.agent?.name || 
+        data?.data?.full_name || 
+        data?.data?.name || 
+        data?.user?.full_name || 
+        'Agent';
 
-      // Block non-agents (only if the API tells us the role)
-      if (role && role !== 'agent') {
-        setApiErr('This portal is for agents only. Please use the correct login page.');
-        return;
-      }
-
-      // "Remember me": persistent vs. session-only storage
+      // Choose storage based on "Remember me" checkbox FIRST
       const storage = remember ? localStorage : sessionStorage;
-      const other = remember ? sessionStorage : localStorage;
 
-      // Clear anything left over from other logins (merchant, user, other projects)
-      ['token', 'role', 'agentId', 'userId', 'merchantId'].forEach((k) => {
-        localStorage.removeItem(k);
-        sessionStorage.removeItem(k);
-      });
-
+      // Save token, role, and name into the correct storage
       storage.setItem('token', token);
       storage.setItem('role', 'AGENT');
-      if (agentId) storage.setItem('agentId', agentId);
+      storage.setItem('agentName', agentName);
 
+      alert("Successfully logged in!");
       router.push('/agenthome');
+
     } catch (err) {
       console.error('Login error:', err);
-
-      if (err.response) {
-        setApiErr(
-          err.response.data?.msg ||
-            err.response.data?.message ||
-            err.response.data?.error ||
-            'Invalid login credentials. Please try again.'
-        );
-      } else {
-        setApiErr('Could not reach the server. Check your connection and try again.');
-      }
+      const errorMessage = 
+        err.response?.data?.message || 
+        err.response?.data?.msg || 
+        'Invalid login credentials. Please try again.';
+      setApiErr(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -158,17 +120,16 @@ export default function AgentLoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
         <div className="bg-white py-8 px-6 shadow-sm border border-gray-200 rounded-2xl sm:px-10">
+          
           {/* API ERROR BANNER */}
           {apiErr && (
-            <div
-              role="alert"
-              className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-xl"
-            >
+            <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-xl">
               {apiErr}
             </div>
           )}
 
           <form onSubmit={handleAgentLogin} className="space-y-5" noValidate>
+            
             {/* EMAIL INPUT */}
             <div>
               <label htmlFor="email" className="block text-xs font-bold text-gray-700 mb-1.5">
@@ -249,6 +210,7 @@ export default function AgentLoginPage() {
               </Link>
             </p>
           </div>
+
         </div>
       </div>
     </div>

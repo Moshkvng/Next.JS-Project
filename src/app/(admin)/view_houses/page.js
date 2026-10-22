@@ -282,8 +282,7 @@ export default function Houses() {
                                     {item.category}
                                 </p>
                                 <p className="mb-3 text-sm text-gray-500">{item.city}</p>
-
-                                {/* Badges */}
+                                
                                 <div className="mb-4 flex flex-wrap gap-2">
                                     <span
                                         className={`rounded-full px-3 py-1 text-xs font-medium ${item.is_verified
@@ -294,7 +293,7 @@ export default function Houses() {
                                         {item.is_verified ? "Verified" : "Pending"}
                                     </span>
                                     <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-900">
-                                        {item.type === "SALES" ? "Sold / Sales" : item.type || "Available"}
+                                        {item.type === "SALES" ? "For Sale" : item.type || "Available"}
                                     </span>
                                 </div>
 

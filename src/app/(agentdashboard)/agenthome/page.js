@@ -1,3 +1,6 @@
+  "use client";
+
+import { useState, useEffect } from 'react';
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -23,6 +26,18 @@ import {
 } from 'react-icons/fi';
 
 export default function AgentDashboard() {
+
+const [agentName, setAgentName] = useState('Agent');
+
+  useEffect(() => {
+    const savedName = localStorage.getItem('agentName');
+    if (savedName) {
+      setAgentName(savedName);
+    }
+  }, []);
+
+
+
   return (
     <div className="flex min-h-screen bg-slate-50 text-gray-900 font-sans">
       <aside className="w-64 bg-white border-r border-gray-200/80 flex flex-col justify-between min-h-screen fixed z-20 shadow-sm">
@@ -100,9 +115,11 @@ export default function AgentDashboard() {
       <main className="flex-1 p-8 ml-64 min-h-screen">
 
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-white p-4 px-6 rounded-2xl border border-gray-200/80 shadow-sm">
-          <div>
+<div>
             <h1 className="text-xl font-bold text-gray-900">Agent Section</h1>
-            <p className="text-xs text-gray-500 mt-1">Yo Welcome<span className="font-semibold text-gray-800">Lex Luthor</span> (<span className="text-blue-600 font-semibold">Boing Real Estate</span>)</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Yo Welcome <span className="font-semibold text-gray-800">{agentName}!</span> (<span className="text-blue-600 font-semibold">Boing Real Estate</span>)
+            </p>
           </div>
 
           <div className="flex items-center gap-3">

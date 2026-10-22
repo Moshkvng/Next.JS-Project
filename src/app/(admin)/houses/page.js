@@ -59,7 +59,7 @@ export default function Houses() {
         <div className="min-h-screen bg-teal-900 md:flex">
             {/* <AdminSidebar activePage="View Houses" /> */}
 
-            <main className="min-w-0 flex-1 p-5 md:p-8">
+            <div className="min-w-0 flex-1 p-5 md:p-8">
                 <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-teal-800 pb-5">
                     <div>
                         <h2 className="text-2xl font-bold text-teal-500">
@@ -138,7 +138,6 @@ export default function Houses() {
                                     <tr key={item.id} className="border-b border-teal-800">
                                         <td className="p-3">{index + 1}</td>
                                         <td className="p-3">{item.name}</td>
-                                        <td className="p-3">{item.agent}</td>
                                         <td className="p-3">{item.city}</td>
                                         <td className="p-3">{item.category}</td>
                                         <td className="p-3">₦{item.price}</td>
@@ -163,7 +162,7 @@ export default function Houses() {
                         </table>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     );
 }

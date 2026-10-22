@@ -65,11 +65,11 @@ export default function Nav() {
                             Create User
                         </Link>
                         <Link 
-                            href="/accounts" 
+                            href="/loginuser" 
                             onClick={() => setDropdownOpen(false)}
                             className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-700 font-medium text-sm"
                         >
-                            Create Merchant
+                            Login User
                         </Link>
                     </div>
                 )}
