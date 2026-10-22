@@ -11,43 +11,59 @@ import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function () {
-    
-        const [properties, setProperties] = useState([]);
-        const [id, setId] = useState("");
-    
-        const getProperties = async () => {
-            const token = localStorage.getItem("token");
-    
-            try {
-    
-                const agentResp = await fetch(
-                    "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
+
+    const [properties, setProperties] = useState([]);
+    const [id, setId] = useState("");
+
+    const getProperties = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+
+            const agentResp = await fetch(
+                "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const agentData = await agentResp.json();
+
+            const agents = Array.isArray(agentData.data)
+                ? agentData.data
+                : [];
+
+            const requests = agents.map((agent) =>
+                fetch(
+                    `http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}&verified=true`,
                     {
                         headers: {
                             authorization: `Bearer ${token}`,
                         },
                     }
-                );
-    
-                const results = await Promise.all(requests);
-    
-                const allProperties = results.flatMap((result) =>
-                    Array.isArray(result.data) ? result.data : []
-                );
-    
-                console.log(allProperties);
-    
-                setProperties(allProperties);
-    
-            } catch (err) {
-                console.log(err);
-            }
-        };
-    
-    
-        useEffect(() => {
-            getProperties();
-        }, []);
+                ).then((resp) => resp.json())
+            );
+
+            const results = await Promise.all(requests);
+            
+            const allProperties = results.flatMap((result) =>
+                Array.isArray(result.data) ? result.data : []
+            );
+
+            console.log("ALL MERCHANT PROPERTIES:", allProperties);
+            setProperties(allProperties);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
+    useEffect(() => {
+        getProperties();
+    }, []);
 
 
     return (
@@ -82,43 +98,38 @@ export default function () {
                     </div>
                 </div>
             </div>
+
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150 gap-5 grid grid-cols-[70%_30%]">
                 <div className="grid grid-cols-2 gap-5">
-                    <div className="rounded-lg shadow-md bg-white">
-                        <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
-                            <p className="text-orange-500">PREMIUM PLUS</p>
-                            <p className="text-green-500">Top listing</p>
-                        </div>
-                        <img src="/images.jpg" alt="" />
-                        <div className="p-5">
-                            <p className="text-3xl">$470,000,000</p>
-                            <p className="text-red-500 text-sm">Stand alone mansion</p>
-                            <p className="text-2xl text-teal-900">6 Bedroom mansion</p>
-                            <p className="text-2xl text-gray-500 py-3">A 6 bedroom mansion, Gusape, Abuja. An address that speaks for itself. with one of the best facilities in the world!</p>
-                            <div className="flex">
-                                <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Gusape District, Abuja</p>
+                    {properties.length > 0 ? (
+                        properties.map((item) => (
+
+                            <div key={item.id} className="rounded-lg shadow-md bg-white">
+                                <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
+                                    <p className="text-orange-500">PREMIUM PLUS</p>
+                                    <p className="text-green-500">Top listing</p>
+                                </div>
+                                <img
+                                            src={item.image || item.images[0]}
+                                            alt={item.name}
+                                            className="h-48 w-full object-cover"
+                                        />
+                                <div className="p-5">
+                                    <p className="text-3xl">${item.price}</p>
+                                    <p className="text-red-500 text-sm">Stand alone mansion</p>
+                                    <p className="text-2xl text-green-600">{item.name}</p>
+                                    <p className="text-2xl text-gray-500 py-3">{item.description}</p>
+                                    <div className="flex">
+                                        <FaLocationDot className="text-gray-500 mt-1" />
+                                        <p className="text-sm text-gray-400 pl-1">{item.city}, Abuja</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="rounded-lg shadow-md bg-white">
-                        <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
-                            <p className="text-orange-500">PREMIUM PLUS</p>
-                            <p className="text-green-500">Top listing</p>
-                        </div>
-                        <img src="/image.jpg" alt="" />
-                        <div className="p-5">
-                            <p className="text-3xl">$290,000,000</p>
-                            <p className="text-red-500 text-sm">Detached duplex for sale</p>
-                            <p className="text-2xl text-teal-900">4 Bedroom Detached Duplex</p>
-                            <p className="text-2xl text-gray-500 py-3">A 4 bedroom Detached Duplex, Karsana, Abuja. An address that speaks for itself. with one of the best facilities in the world!</p>
-                            <div className="flex">
-                                <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Karsana District, Abuja</p>
-                            </div>
-                        </div>
-                    </div>
+
+                        ))
+                    ) : (<p>Properties Loading, please wait...</p>)}
                 </div>
+
                 <div className="bg-gray-100">
                     <div className="bg-white p-2 mr-5 rounded-lg">
                         <div className="flex justify-between p-3">
