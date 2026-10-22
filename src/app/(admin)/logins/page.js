@@ -45,11 +45,7 @@ export default function () {
                 localStorage.setItem("role", resp.data.data.role);
 
                 alert("Login successful");
-<<<<<<< HEAD:src/app/(admin)/logins/page.js
-                router.push("/adminpanel");
-=======
                 router.push("/admin/dashboard/");
->>>>>>> d8e158161cc0875971190fec2e092402dea8c9b8:src/app/admin/login/page.js
             } 
             
                 else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
