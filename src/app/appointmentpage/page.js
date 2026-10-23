@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Nav from '../components/Nav';
 
 export default function SimpleAppointmentPage() {
   const router = useRouter();
@@ -129,6 +130,7 @@ export default function SimpleAppointmentPage() {
 
   return (
     <div className="bg-gray-50 text-gray-950 p-6 md:p-12 min-h-screen">
+      <Nav/>
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header Section */}
