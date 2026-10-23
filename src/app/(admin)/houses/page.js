@@ -35,12 +35,11 @@ export default function Houses() {
             );
 
             const results = await Promise.all(requests);
-
             const allProperties = results.flatMap((result) =>
                 Array.isArray(result.data) ? result.data : []
             );
 
-            console.log("ALL MERCHANT PROPERTIES:", allProperties);
+            console.log(allProperties);
 
             setProperties(allProperties);
 
@@ -153,7 +152,6 @@ export default function Houses() {
                                             )}
                                         </td>
                                         <td className="p-3">
-                                            {/* adjust if your API uses type / status field */}
                                             {item.type == "SALES" == "sold" ? "Sold" : "Available"}
                                         </td>
                                     </tr>

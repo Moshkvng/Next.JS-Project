@@ -6,8 +6,6 @@ import axios from "axios";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 
-
-
 export default function () {
 
     const [password, setPassword] = useState("");
@@ -22,7 +20,6 @@ export default function () {
         e.preventDefault();
         setLoginError("");
         setErrorCheck(true);
-
 
         if (email == "" || password == "" || !emailRegex.test(email) || password.length < 8 ) {
             return;
@@ -42,21 +39,25 @@ export default function () {
             console.log(resp.data)
 
             if (resp.data?.type === "SUCCESS" || resp.data?.code === 200) {
-                localStorage.setItem("userId", resp.data.data.id);
-                localStorage.setItem("token", resp.data.data.token);  
-                localStorage.setItem("role", resp.data.data.role);
+
+                localStorage.setItem("userId", resp.data.data.id || resp.data.data._id);
+                localStorage.setItem("user_id", resp.data.data.id || resp.data.data._id);
+                localStorage.setItem("user_token", resp.data.data.token); 
+                localStorage.setItem("token", resp.data.data.token); 
+                localStorage.setItem("role", resp.data.data.role || "user");
 
                 alert("Login successful");
                 router.push("/");
             } 
             
-                else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
+            else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
                 alert ("Token expired, re-login")
             } else {
                 setLoginError("Wrong email or password");
             }
         } catch (err) {
             console.log(err);
+            setLoginError("Invalid email or password");
         }
     };
 

@@ -133,7 +133,7 @@ export default function SimpleAppointmentPage() {
       <Nav/>
       <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Header Section */}
+      
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
           <div>
             <h1 className="text-3xl font-black text-gray-900">Book Property Inspection</h1>

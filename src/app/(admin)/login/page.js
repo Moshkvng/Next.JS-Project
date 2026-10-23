@@ -40,15 +40,17 @@ export default function () {
             console.log(resp.data)
 
             if (resp.data?.type === "SUCCESS" || resp.data?.code === 200) {
-                localStorage.setItem("merchantId", resp.data.data.id);
-                localStorage.setItem("token", resp.data.data.token);  
-                localStorage.setItem("role", resp.data.data.role);
+
+                localStorage.setItem("merchantId", resp.data.data.id || resp.data.data._id);
+                localStorage.setItem("merchant_token", resp.data.data.token);  
+                localStorage.setItem("token", resp.data.data.token); 
+                localStorage.setItem("role", resp.data.data.role || "merchant");
 
                 alert("Login successful");
-                router.push("/dashboard/");
+                router.push("/dashboard");
             } 
             
-                else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
+            else if (resp.data?.type == "TOKEN_EXPIRED" || resp.data?.code == 419) {
                 alert ("Token expired, re-login")
             } else if (resp.data?.status == 404) {
                 alert("Not found or Wrong password")
@@ -57,6 +59,7 @@ export default function () {
             }
         } catch (err) {
             console.log(err);
+            setLoginError("Invalid email or password");
         }
     };
 
