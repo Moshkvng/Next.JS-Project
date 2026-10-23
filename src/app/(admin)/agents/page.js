@@ -117,7 +117,7 @@ export default function Agents() {
                             Manage property agents
                         </p>
                     </div>
-                    <Link href="/agentpage" className="border border-teal-500 shadow-md text-center rounded-lg mb-8 bg-teal-800 p-2">
+                    <Link href="/create_agent" className="border border-teal-500 shadow-md text-center rounded-lg mb-8 bg-teal-800 p-2">
                         <h2 className="text-2xl font-bold text-teal-500">Create Agent</h2>
                         <p className="mt-1 text-sm text-[#A8A476]">
                             create an agent for your properties

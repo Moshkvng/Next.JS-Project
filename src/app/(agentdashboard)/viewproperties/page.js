@@ -70,6 +70,7 @@ export default function ViewPropertyPage() {
         const genData = await genResp.json();
         allProperties = Array.isArray(genData.data) ? genData.data : Array.isArray(genData) ? genData : [];
       }
+      
 
       setProperties(allProperties);
     } catch (err) {
