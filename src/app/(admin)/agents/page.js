@@ -153,17 +153,7 @@ export default function Agents() {
                                         <tr key={item.id || index} className="border-b border-teal-800">
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">{item.id}</td>
-<<<<<<< HEAD:src/app/admin/agents/page.js
                                             <td className="p-3">{item.avatar}</td>
-=======
-                                            <td className="p-3">
-                                                <img 
-                                                    src={item.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.full_name || item.name || 'Agent')}&background=0D9488&color=fff`} 
-                                                    alt="Agent Avatar" 
-                                                    className="w-10 h-10 rounded-full object-cover border border-teal-600"
-                                                />
-                                            </td>
->>>>>>> main:src/app/(admin)/agents/page.js
                                             <td className="p-3">
                                                 {item.full_name || item.name}
                                             </td>
@@ -230,7 +220,6 @@ export default function Agents() {
                                 </button>
                             </div>
                             <div className="flex gap-4">
-<<<<<<< HEAD:src/app/admin/agents/page.js
                                 {modal.avatar && (
                                     <img
                                         src={modal.avatar}
@@ -238,13 +227,6 @@ export default function Agents() {
                                         className="h-50 w-50 rounded-full object-cover"
                                     />
                                 )}
-=======
-                                <img
-                                    src={modal.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(modal.full_name || 'Agent')}&background=0D9488&color=fff`}
-                                    alt="Agent Avatar"
-                                    className="h-24 w-24 rounded-full object-cover border-2 border-teal-600 shadow-md"
-                                />
->>>>>>> main:src/app/(admin)/agents/page.js
                                 <div>
                                     <h2 className="text-xl font-semibold text-teal-800">
                                         {modal.full_name}
