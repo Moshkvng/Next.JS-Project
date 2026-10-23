@@ -7,7 +7,6 @@ export default function AdminSidebar({ activePage }) {
         { name: "Agents", href: "/agents" },
         { name: "Create House", href: "/create_house" },
         { name: "View Houses", href: "/houses" },
-        { name: "Categories", href: "/category" },
     ];
 
     return (
