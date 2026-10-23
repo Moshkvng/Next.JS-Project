@@ -9,7 +9,7 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <div className="bg-blue-600 text-white p-2 rounded-lg font-bold text-xl">
-              RE
+              BOING
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
               Prime<span className="text-blue-600">Estates</span>
