@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
@@ -7,14 +7,17 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+<<<<<<< HEAD
+=======
+import Footer from "@/app/components/Footer";
+>>>>>>> 1a43c00f0f594f4eae333589f45a36b72253b74c
+import Nav from "@/app/components/Nav";
 
 export default function () {
 
     const { id } = useParams();
+    const router = useRouter();
     const [property, setProperty] = useState({});
-
-
-
 
     useEffect(() => {
         const getProperty = async () => {
@@ -45,9 +48,25 @@ export default function () {
     }, [id]);
 
 
+    const handleBookAppointment = () => {
+        const propId = property.id || property._id;
+        if (!propId) return;
+
+        router.push(
+            `/appointmentpage?propertyId=${propId}&propertyName=${encodeURIComponent(
+                property.name || ""
+            )}`
+        );
+    };
+
     return (
         <div className="bg-gray-100">
+<<<<<<< HEAD
+            <Nav/>
+=======
+            <Nav />
             <h2 className="text-2xl text-gray-500 text-center p-5">This is the Single House Page</h2>
+>>>>>>> 1a43c00f0f594f4eae333589f45a36b72253b74c
             <div className="w-[95%] mx-auto p-5 shadow-md bg-white mb-10">
                 <div>
                     <p className="text-sm text-gray-500">Bedrooms</p>
@@ -93,7 +112,12 @@ export default function () {
                             </div>
                             <p className="font-bold text-teal-600 text-xl px-5">Or</p>
                             <div className="m-2">
-                                <button className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg">BOOK AN APPOINTMENT</button>
+                                <button 
+                                    onClick={handleBookAppointment}
+                                    className="px-4 py-2 rounded-lg font-bold text-white bg-blue-700 text-lg cursor-pointer"
+                                >
+                                    BOOK AN APPOINTMENT
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -449,6 +473,7 @@ export default function () {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

@@ -1,11 +1,37 @@
-import Image from "next/image";
+
+import Areaguild from "./components/Areaguild";
+import Dreamhouse from "./components/Dreamhouse";
+import Filter from "./components/Filter";
+import Footer from "./components/Footer";
+import Hero from "./components/Hero";
 import Nav from "./components/Nav";
+import Navtop from "./components/Navtop";
+import Ourachievement from "./components/Ourachievement";
+import Ourvalue from "./components/Ourvalue";
+import Question from "./components/Question";
+import Search from "./components/search";
+import Shoppage from "./components/Shoppage";
+
+
+
 
 export default function Home() {
   return (
-    <div>
-      <Nav/>
-      <h1 className="text-2xl p-5 font-semibold bg-teal-200 text-gray-500">Welcome to Next JS Class</h1>
+    <div className="">
+      <div className="bg-[#fef7f2]">
+        <Navtop />
+        <Nav />
+        <Hero />
+      </div>
+      <Search />
+      <Dreamhouse />
+      <Ourvalue />
+      <Ourachievement />
+      <Areaguild />
+      <Shoppage />
+      <Filter />
+      <Question />
+      <Footer />
     </div>
   );
 }

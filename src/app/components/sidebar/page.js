@@ -2,12 +2,11 @@ import Link from "next/link";
 
 export default function AdminSidebar({ activePage }) {
     const menuItems = [
-        { name: "Dashboard", href: "/admin/dashboard" },
-        { name: "Users", href: "/admin/users" },
-        { name: "Agents", href: "/admin/agents" },
-        { name: "Create House", href: "/admin/create_house" },
-        { name: "View Houses", href: "/admin/houses" },
-        { name: "Categories", href: "/admin/category" },
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Users", href: "/users" },
+        { name: "Agents", href: "/agents" },
+        { name: "Create House", href: "/create_house" },
+        { name: "View Houses", href: "/houses" },
     ];
 
     return (
