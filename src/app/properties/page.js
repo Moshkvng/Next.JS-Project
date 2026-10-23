@@ -1,4 +1,3 @@
-
 "use client";
 // import AdminSidebar from "@/app/components/sidebar/page";
 import Link from "next/link";
@@ -10,62 +9,60 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 
-export default function () {
+export default function PropertiesPage() {
 
     const [properties, setProperties] = useState([]);
-    const [id, setId] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const getProperties = async () => {
-        const token = localStorage.getItem("token");
+        setLoading(true);
+        
+
+        const token = 
+            localStorage.getItem("merchant_token") || 
+            localStorage.getItem("agent_token") || 
+            localStorage.getItem("token") || 
+            localStorage.getItem("user_token");
+
+        const headers = token ? { authorization: `Bearer ${token}` } : {};
 
         try {
 
-            const agentResp = await fetch(
-                "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
-                {
-                    headers: {
-                        authorization: `Bearer ${token}`,
-                    },
+            let resp = await fetch("http://property.reworkstaging.name.ng/v1/properties?offset=0&limit=100", { headers });
+            let result = await resp.json();
+            let propertyList = Array.isArray(result.data) ? result.data : (Array.isArray(result) ? result : []);
+
+
+            if (propertyList.length === 0) {
+                const agentResp = await fetch("http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100", { headers });
+                const agentData = await agentResp.json();
+                const agents = Array.isArray(agentData.data) ? agentData.data : [];
+
+                if (agents.length > 0) {
+                    const requests = agents.map((agent) =>
+                        fetch(`http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}`, { headers })
+                            .then((res) => res.json())
+                            .catch(() => ({}))
+                    );
+                    const results = await Promise.all(requests);
+                    propertyList = results.flatMap((res) => (Array.isArray(res.data) ? res.data : []));
                 }
-            );
+            }
 
-            const agentData = await agentResp.json();
-
-            const agents = Array.isArray(agentData.data)
-                ? agentData.data
-                : [];
-
-            const requests = agents.map((agent) =>
-                fetch(
-                    `http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}&verified=true`,
-                    {
-                        headers: {
-                            authorization: `Bearer ${token}`,
-                        },
-                    }
-                ).then((resp) => resp.json())
-            );
-
-            const results = await Promise.all(requests);
-
-            const allProperties = results.flatMap((result) =>
-                Array.isArray(result.data) ? result.data : []
-            );
-
-            console.log("ALL MERCHANT PROPERTIES:", allProperties);
-            setProperties(allProperties);
-
+            console.log("FETCHED PROPERTIES:", propertyList);
+            setProperties(propertyList);
         } catch (err) {
-            console.log(err);
+            console.error("Error fetching properties:", err);
+        } finally {
+            setLoading(false);
         }
     };
-
 
     useEffect(() => {
         getProperties();
     }, []);
-
 
     return (
         <div className="bg-gray-100">
@@ -107,13 +104,13 @@ export default function () {
                         {properties.length > 0 ? (
                             properties.map((item) => (
 
-                                <Link href={`/properties/${item.id}`} key={item.id} className="rounded-lg shadow-md bg-white">
+                                <Link href={`/properties/${item.id || item._id}`} key={item.id || item._id} className="rounded-lg shadow-md bg-white">
                                     <div className="flex justify-between text-sm p-2 rounded-t-lg bg-blue-900">
                                         <p className="text-orange-500">PREMIUM PLUS</p>
                                         <p className="text-green-500">Top listing</p>
                                     </div>
                                     <img
-                                        src={item.image || item.images[0]}
+                                        src={item.image || (Array.isArray(item.images) ? item.images[0] : "") || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80"}
                                         alt={item.name}
                                         className="h-48 w-full object-cover"
                                     />
@@ -214,6 +211,7 @@ export default function () {
                     </div>
                 </div>
             </div>
+
             <hr className="text-gray-200 py-5 text-2xl" />
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150">
                 <div className="flex justify-between p-5">
@@ -271,6 +269,7 @@ export default function () {
                     </div>
                 </div>
             </div>
+
             <hr className="text-gray-200 py-5 text-2xl" />
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150">
                 <div className="flex justify-between p-5">
@@ -336,6 +335,7 @@ export default function () {
                     </div>
                 </div>
             </div>
+
             <hr className="text-gray-200 py-5 text-2xl" />
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150">
                 <div className="flex justify-between p-5">
@@ -348,51 +348,52 @@ export default function () {
                         <div className="p-5">
                             <p className="text-3xl font-bold">$470,000,000</p>
                             <p className="text-red-500 text-sm">Stand alone mansion</p>
-                            <p className="text-2xl text-blue-600">6 Bedroom mansion</p>
+                            <p className="text-2xl text-blue-600">5 Bedroom Mansion</p>
                             <div className="flex">
                                 <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Gusape District, Abuja</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-lg shadow-md bg-white">
-                        <img src="/img.jpg" alt="" />
-                        <div className="p-5">
-                            <p className="text-3xl font-bold">$290,000,000</p>
-                            <p className="text-red-500 text-sm">Detached duplex for sale</p>
-                            <p className="text-2xl text-blue-600">4 Bedroom Detached Duplex</p>
-                            <div className="flex">
-                                <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Karsana District, Abuja</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-lg shadow-md bg-white">
-                        <img src="/img2.jpg" alt="" />
-                        <div className="p-5">
-                            <p className="text-3xl font-bold">$240,000,000</p>
-                            <p className="text-red-500 text-sm">Block of Flat</p>
-                            <p className="text-2xl text-blue-600">4 Bedroom Terraced</p>
-                            <div className="flex">
-                                <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Gusape District, Abuja</p>
+                                <p className="text-sm text-gray-400 pl-1">Maitama District, Abuja</p>
                             </div>
                         </div>
                     </div>
                     <div className="rounded-lg shadow-md bg-white">
                         <img src="/image.jpg" alt="" />
                         <div className="p-5">
-                            <p className="text-3xl font-bold">$210,000,000</p>
-                            <p className="text-red-500 text-sm">Semi-detached</p>
-                            <p className="text-2xl text-blue-600">3 Bedroom Terraced</p>
+                            <p className="text-3xl font-bold">$380,000,000</p>
+                            <p className="text-red-500 text-sm">Detached Duplex</p>
+                            <p className="text-2xl text-blue-600">4 Bedroom Duplex</p>
                             <div className="flex">
                                 <FaLocationDot className="text-gray-500 mt-1" />
                                 <p className="text-sm text-gray-400 pl-1">Asokoro District, Abuja</p>
                             </div>
                         </div>
                     </div>
+                    <div className="rounded-lg shadow-md bg-white">
+                        <img src="/images.jpg" alt="" />
+                        <div className="p-5">
+                            <p className="text-3xl font-bold">$290,000,000</p>
+                            <p className="text-red-500 text-sm">Terraced House</p>
+                            <p className="text-2xl text-blue-600">3 Bedroom Terraced</p>
+                            <div className="flex">
+                                <FaLocationDot className="text-gray-500 mt-1" />
+                                <p className="text-sm text-gray-400 pl-1">Jabi District, Abuja</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-lg shadow-md bg-white">
+                        <img src="/img1.jpg" alt="" />
+                        <div className="p-5">
+                            <p className="text-3xl font-bold">$210,000,000</p>
+                            <p className="text-red-500 text-sm">Apartment</p>
+                            <p className="text-2xl text-blue-600">2 Bedroom Apartment</p>
+                            <div className="flex">
+                                <FaLocationDot className="text-gray-500 mt-1" />
+                                <p className="text-sm text-gray-400 pl-1">Wuse 2, Abuja</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <hr className="text-gray-200 py-5 text-2xl" />
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150">
                 <div className="flex justify-between p-5">
@@ -425,18 +426,6 @@ export default function () {
                         </div>
                     </div>
                     <div className="rounded-lg shadow-md bg-white">
-                        <img src="/img4.jpg" alt="" />
-                        <div className="p-5">
-                            <p className="text-3xl font-bold">$280,000,000</p>
-                            <p className="text-red-500 text-sm">Block of Flat</p>
-                            <p className="text-2xl text-blue-600">4 Bedroom Terraced</p>
-                            <div className="flex">
-                                <FaLocationDot className="text-gray-500 mt-1" />
-                                <p className="text-sm text-gray-400 pl-1">Garki District, Abuja</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-lg shadow-md bg-white">
                         <img src="/images.jpg" alt="" />
                         <div className="p-5">
                             <p className="text-3xl font-bold">$220,000,000</p>
@@ -448,42 +437,51 @@ export default function () {
                             </div>
                         </div>
                     </div>
+                    <div className="rounded-lg shadow-md bg-white">
+                        <img src="/img4.jpg" alt="" />
+                        <div className="p-5">
+                            <p className="text-3xl font-bold">$280,000,000</p>
+                            <p className="text-red-500 text-sm">Block of Flat</p>
+                            <p className="text-2xl text-blue-600">4 Bedroom Terraced</p>
+                            <div className="flex">
+                                <FaLocationDot className="text-gray-500 mt-1" />
+                                <p className="text-sm text-gray-400 pl-1">Garki District, Abuja</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <hr className="text-gray-200 py-5 text-2xl" />
             <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150">
                 <div className="mb-5">
                     <h4 className="text-teal-700 text-lg font-bold pt-5 pb-3">AREA GUIDE</h4>
                     <h2 className="text-5xl text-blue-700 pb-5">About Abuja, Nigeria</h2>
                     <p className="max-w-200">Abuja is the capital city of Nigeria. It is located in the centre of Nigeria, within the Federal Capital Territory (FCT). Abuja is a planned city, and was built mainly in the 1980s. It officially became Nigeria's capital on 12 December 1991, replacing Lagos, which is still the country's most populous city. At the 2006 census, the city of Abuja had a population of 776,298, making it one of the top ten most populous cities in Nigeria. The unofficial metropolitan area of Abuja is well over three million, which would make it the fourth largest urban area in Nigeria only surpassed by Lagos, Kano and Ibadan.</p>
                 </div>
-                <div>
-                    <h4 className="text-teal-700 text-lg font-bold pt-5 pb-3">FAQ</h4>
-                    <h2 className="text-5xl text-blue-700 pb-5">Frequently asked questions</h2>
-                    <div className="grid grid-cols-2 gap-5">
-                        <div className="shadow-sm bg-gray-200 p-5">
-                            <h3 className="text-lg font-bold">What is Boing's average price of houses for sale in Estates, Abuja?</h3>
-                            <p>The average price of houses for sale in Estates, Abuja is ₦300,000,000.</p>
-                        </div>
-                        <div className="shadow-sm bg-gray-200 p-5">
-                            <h3 className="text-lg font-bold">What is the price of the most expensive houses for sale at Boing, Abuja?</h3>
-                            <p>Boing's prices for houses for sale in Estates, Abuja go up to around ₦3,500,000,000.</p>
-                        </div>
-                        <div className="shadow-sm bg-gray-200 p-5">
-                            <h3 className="text-lg font-bold">What is Boing's price of the cheapest houses for sale in Estates, Abuja?</h3>
-                            <p>Boing's prices for houses for sale in Estates, Abuja start from around ₦30,000,000.</p>
-                        </div>
-                        <div className="shadow-sm bg-gray-200 p-5">
-                            <h3 className="text-lg font-bold">What is Boing's price of the cheapest houses for sale in Estates, Abuja?</h3>
-                            <p>Boing's prices for houses for sale in Estates, Abuja start from around ₦30,000,000.</p>
-                        </div>
-                        <div className="shadow-sm bg-gray-200 p-5">
-                            <h3 className="text-lg font-bold">What is Boing's price of the cheapest houses for sale in Estates, Abuja?</h3>
-                            <p>Boing's prices for houses for sale in Estates, Abuja start from around ₦30,000,000.</p>
-                        </div>
+            </div>
+
+            <hr className="text-gray-200 py-5 text-2xl" />
+            <div className="w-[95%] mx-auto p-5 shadow-md bg-gray-150 mb-12">
+                <h4 className="text-teal-700 text-lg font-bold pt-5 pb-3">FAQ</h4>
+                <h2 className="text-5xl text-blue-700 pb-5">Frequently asked questions</h2>
+                <div className="grid grid-cols-2 gap-5">
+                    <div className="shadow-sm bg-gray-200 p-5 rounded-lg">
+                        <h3 className="text-lg font-bold">What is Boing's average price of houses for sale in Estates, Abuja?</h3>
+                        <p className="pt-2">The average price of houses for sale in Estates, Abuja is ₦300,000,000.</p>
+                    </div>
+                    <div className="shadow-sm bg-gray-200 p-5 rounded-lg">
+                        <h3 className="text-lg font-bold">What is the price of the most expensive houses for sale at Boing, Abuja?</h3>
+                        <p className="pt-2">Boing's prices for houses for sale in Estates, Abuja go up to around ₦3,500,000,000.</p>
+                    </div>
+                    <div className="shadow-sm bg-gray-200 p-5 rounded-lg">
+                        <h3 className="text-lg font-bold">What is Boing's price of the cheapest houses for sale in Estates, Abuja?</h3>
+                        <p className="pt-2">Boing's prices for houses for sale in Estates, Abuja start from around ₦30,000,000.</p>
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
-    )
+
+    );
 }

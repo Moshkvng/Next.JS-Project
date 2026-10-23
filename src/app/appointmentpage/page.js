@@ -131,7 +131,7 @@ export default function SimpleAppointmentPage() {
     <div className="bg-gray-50 text-gray-950 p-6 md:p-12 min-h-screen">
       <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Header Section */}
+      
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
           <div>
             <h1 className="text-3xl font-black text-gray-900">Book Property Inspection</h1>

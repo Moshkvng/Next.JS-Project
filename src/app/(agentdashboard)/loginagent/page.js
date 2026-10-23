@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,17 +36,28 @@ export default function LoginPage() {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || 'Login failed. Please check your credentials.');
+      if (!res.ok || (data.code && data.code !== 200)) {
+        throw new Error(data.message || data.msg || 'Login failed. Please check your credentials.');
       }
 
 
-      if (data.token) {
-        localStorage.setItem('agent_token', data.token);
-      }
-      alert("successfully loged in")
+      const token = data.data?.token || data.token;
+      const merchantId = data.data?.id || data.data?._id || data.id;
 
-      window.location.href = '/agenthome';
+      if (token) {
+        localStorage.setItem('agent_token', token);
+        localStorage.setItem('merchant_token', token);
+        localStorage.setItem('token', token); 
+      }
+
+      if (merchantId) {
+        localStorage.setItem('merchantId', merchantId);
+      }
+
+      alert("Successfully logged in!");
+
+
+      router.push('/agenthome');
     } catch (err) {
       setError(err.message);
     } finally {

@@ -7,6 +7,8 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaShareAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import Footer from "@/app/components/Footer";
+import Nav from "@/app/components/Nav";
 
 export default function () {
 
@@ -42,7 +44,7 @@ export default function () {
         getProperty();
     }, [id]);
 
-    // Function to link to appointment page passing property data
+
     const handleBookAppointment = () => {
         const propId = property.id || property._id;
         if (!propId) return;
@@ -56,6 +58,7 @@ export default function () {
 
     return (
         <div className="bg-gray-100">
+            <Nav />
             <h2 className="text-2xl text-gray-500 text-center p-5">This is the Single House Page</h2>
             <div className="w-[95%] mx-auto p-5 shadow-md bg-white mb-10">
                 <div>
@@ -463,6 +466,7 @@ export default function () {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }
