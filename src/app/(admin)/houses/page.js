@@ -10,39 +10,55 @@ export default function Houses() {
 
     const getProperties = async () => {
         const token = localStorage.getItem("token");
+
         try {
             const agentResp = await fetch(
                 "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=100",
                 {
                     headers: {
-                        authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
+
             const agentData = await agentResp.json();
-            const agents = Array.isArray(agentData.data)
-                ? agentData.data
-                : [];
-            const requests = agents.map((agent) =>
-                fetch(
-                    `http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}&verified=true`,
-                    {
-                        headers: {
-                            authorization: `Bearer ${token}`,
-                        },
-                    }
-                ).then((resp) => resp.json())
+            const agents = Array.isArray(agentData.data) ? agentData.data : [];
+
+            console.log("AGENTS:", agents);
+
+            const nameById = {};
+            agents.forEach((a) => {
+                nameById[a.id] = a.full_name || a.name || "—";
+            });
+
+            const results = await Promise.all(
+                agents.map((agent) =>
+                    fetch(
+                        `http://property.reworkstaging.name.ng/v1/properties?agent=${agent.id}&verified=true`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    ).then((resp) => resp.json())
+                )
             );
 
-            const results = await Promise.all(requests);
-            const allProperties = results.flatMap((result) =>
-                Array.isArray(result.data) ? result.data : []
-            );
+            const allProperties = results.flatMap((result, index) => {
+                const list = Array.isArray(result.data) ? result.data : [];
+                const batchAgent = agents[index];
+
+                console.log("Batch agent:", batchAgent?.id, batchAgent?.full_name);
+
+                return list.map((p) => ({
+                    ...p,
+                    agentName: batchAgent?.full_name || batchAgent?.name || "Unknown agent",
+                }));
+            });
 
             console.log(allProperties);
-
+            console.log("Sample agentName:", allProperties[0]?.agentName);
             setProperties(allProperties);
-
         } catch (err) {
             console.log(err);
         }
@@ -70,10 +86,10 @@ export default function Houses() {
                     </div>
 
                     <div className="flex gap-5">
-                        <Link href="/admin/create_house">
+                        <Link href="/create_house">
                             <button
                                 type="button"
-                                className="rounded-lg bg-teal-500 px-4 py-2 font-medium text-teal-950 shadow-md hover:bg-teal-400"
+                                className="cursor-pointer rounded-lg bg-teal-500 px-4 py-2 font-medium text-teal-950 shadow-md hover:bg-teal-400"
                             >
                                 Add House
                             </button>
@@ -90,12 +106,12 @@ export default function Houses() {
                 <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="rounded-xl bg-[#DCEBE6] p-5 text-teal-900 shadow-md">
                         <p>Total Listed</p>
-                        <h3 className="mt-3 text-2xl font-bold">00</h3>
+                        <h3 className="mt-3 text-2xl font-bold">{properties.length}</h3>
                     </div>
 
                     <div className="rounded-xl bg-[#E8E3CF] p-5 text-[#716B42] shadow-md">
                         <p>Available</p>
-                        <h3 className="mt-3 text-2xl font-bold">00</h3>
+                        <h3 className="mt-3 text-2xl font-bold">{properties.length}</h3>
                     </div>
 
                     <div className="rounded-xl bg-[#E8DDE9] p-5 text-[#765779] shadow-md">
@@ -137,6 +153,7 @@ export default function Houses() {
                                     <tr key={item.id} className="border-b border-teal-800">
                                         <td className="p-3">{index + 1}</td>
                                         <td className="p-3">{item.name}</td>
+                                        <td className="p-3">{item.agentName}</td>
                                         <td className="p-3">{item.city}</td>
                                         <td className="p-3">{item.category}</td>
                                         <td className="p-3">₦{item.price}</td>
@@ -152,7 +169,7 @@ export default function Houses() {
                                             )}
                                         </td>
                                         <td className="p-3">
-                                            {item.type == "SALES" == "sold" ? "Sold" : "Available"}
+                                            {item.market_status || (item.type === "SALES" ? "Sales" : item.type) || "Available"}
                                         </td>
                                     </tr>
                                 ))}

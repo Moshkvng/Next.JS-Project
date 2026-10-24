@@ -3,11 +3,18 @@ import AdminSidebar from "@/app/components/sidebar/page";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
 export default function Agents() {
 
     const [agent, setAgent] = useState([]);
     const [modal, setModal] = useState("");
     const [loading, setLoading] = useState(true);
+
+    const agentAvatarUrl = (avatar) => {
+        if (!avatar) return null;
+        if (String(avatar).startsWith("http")) return avatar;
+        return `http://property.reworkstaging.name.ng/resources/${avatar}`;
+    };
 
     useEffect(() => {
         const fetchAgent = async () => {
@@ -78,14 +85,13 @@ export default function Agents() {
     };
 
     const deleteAgent = async (agentId) => {
-        let ask = confirm("Do you want to delete this agent profile?");
-        if (!ask) return;
-
-        const token = localStorage.getItem("token");
+        let ask = confirm("Do you want to delete this agent?");
+        if (!ask) return
 
         try {
+            const token = localStorage.getItem("token");
             const resp = await fetch(
-                "http://property.reworkstaging.name.ng/v1/merchants/agents?offset=0&limit=10",
+                `http://property.reworkstaging.name.ng/v1/merchants/agents/${agentId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -97,12 +103,18 @@ export default function Agents() {
 
             const data = await resp.json();
 
-            console.log(data);
+            console.log("DELETE:", data);
 
+            if (resp.ok || data.code === 200) {
+                alert("Agent deleted successfully!");
+                setAgents((prev) => prev.filter((p) => p.id !== agentId));
+            } else {
+                alert(data.msg || "Delete failed");
+            }
         } catch (err) {
-            console.log(err);
+            console.log(err)
         }
-    };
+    }
 
 
     return (
@@ -153,7 +165,19 @@ export default function Agents() {
                                         <tr key={item.id || index} className="border-b border-teal-800">
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">{item.id}</td>
-                                            <td className="p-3">{item.avatar}</td>
+                                            <td className="p-3">
+                                                {agentAvatarUrl(item.avatar) ? (
+                                                    <img
+                                                        src={agentAvatarUrl(item.avatar)}
+                                                        alt={item.full_name || ""}
+                                                        className="h-12 w-12 rounded-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
+                                                        {(item.full_name || "?").charAt(0)}
+                                                    </div>
+                                                )}
+                                            </td>
                                             <td className="p-3">
                                                 {item.full_name || item.name}
                                             </td>
@@ -220,19 +244,26 @@ export default function Agents() {
                                 </button>
                             </div>
                             <div className="flex gap-4">
-                                {modal.avatar && (
-                                    <img
-                                        src={modal.avatar}
-                                        alt=""
-                                        className="h-50 w-50 rounded-full object-cover"
-                                    />
-                                )}
+                                <div>
+                                    {agentAvatarUrl(modal.avatar) ? (
+                                        <img
+                                            src={agentAvatarUrl(modal.avatar)}
+                                            alt={modal.full_name || ""}
+                                            className="h-50 w-50 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gray-300 text-2xl font-bold">
+                                            {(modal.full_name || "?").charAt(0)}
+                                        </div>
+                                    )}
+                                </div>
                                 <div>
                                     <h2 className="text-xl font-semibold text-teal-800">
                                         {modal.full_name}
                                     </h2>
                                     <p className="text-gray-500">{modal.email}</p>
-                                    <p className="text-green-600">{modal.primary_phone}</p>
+                                    <p className="p-3">Id: {modal.id}</p>
+                                    <p className="text-yellow-800">A very dedicated, trust worthy agent, with a track record of high integrity, and honesty.</p>
                                     <p className="text-sm text-red-600">
                                         {modal.is_verified ? "Verified" : "Pending"}
                                     </p>

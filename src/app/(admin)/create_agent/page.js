@@ -61,7 +61,7 @@ export default function () {
 
             if (!agentId) {
                 alert("Agent created successfully!");
-                router.push("/loginagent");
+                router.push("/agents");
                 return;
             }
 

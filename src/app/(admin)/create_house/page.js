@@ -2,6 +2,7 @@
 "use client"
 import AdminSidebar from "@/app/components/sidebar/page";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateHouse() {
 
@@ -20,6 +21,7 @@ export default function CreateHouse() {
     const [amenities, setAmenities] = useState([]);
     const [agentId, setAgentId] = useState("");
     const [agent, setAgent] = useState([]);
+    const router = useRouter();
 
     const verifyProperty = async (propertyId) => {
         const token = localStorage.getItem("token");
@@ -126,6 +128,7 @@ export default function CreateHouse() {
             await verifyProperty(propertyId);
 
             alert("Property created successfully");
+            router.push("/view_houses");
         } catch (err) {
             console.error(err);
             alert("Something went wrong");

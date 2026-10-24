@@ -82,31 +82,36 @@ export default function Houses() {
     }, []);
 
 
-    const deleteProperty = async (id) => {
-        let ask = confirm("Do you want to delete this property?");
-        if (!ask) return
+    const deleteProperty = async (propertyId) => {
+        if (!confirm("Do you want to delete this property?")) return;
+
+        const token = localStorage.getItem("token");
 
         try {
             const resp = await fetch(
-                `http://property.reworkstaging.name.ng/v1/properties/:${propertiesId}`,
+                `http://property.reworkstaging.name.ng/v1/properties/${propertyId}`,
                 {
                     method: "DELETE",
                     headers: {
-                        "content-type": "application/json",
-                        authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
 
-            const data = await resp.data;
-            if (data.id) {
-                alert("Property deleted successfully!");
-            }
+            const data = await resp.json().catch(() => ({}));
+            console.log("DELETE status:", resp.status, data);
 
+            if (resp.ok || data.code === 200 || data.type === "SUCCESS") {
+                setProperties((prev) => prev.filter((p) => p.id !== propertyId));
+                alert("Property deleted successfully!");
+            } else {
+                alert(data.msg || "Delete failed on server");
+            }
         } catch (err) {
-            console.log(err)
+            console.error(err);
+            alert("Delete failed");
         }
-    }
+    };
 
     useEffect(() => {
 
@@ -239,10 +244,10 @@ export default function Houses() {
                         </p>
                     </div>
 
-                    <Link href="/admin/create_house">
+                    <Link href="/create_house">
                         <button
                             type="button"
-                            className="rounded-lg bg-teal-500 px-4 py-2 font-medium text-teal-950 shadow-md hover:bg-teal-400"
+                            className="cursor-pointer rounded-lg bg-teal-500 px-4 py-2 font-medium text-teal-950 shadow-md hover:bg-teal-400"
                         >
                             Add House
                         </button>
@@ -282,7 +287,7 @@ export default function Houses() {
                                     {item.category}
                                 </p>
                                 <p className="mb-3 text-sm text-gray-500">{item.city}</p>
-                                
+
                                 <div className="mb-4 flex flex-wrap gap-2">
                                     <span
                                         className={`rounded-full px-3 py-1 text-xs font-medium ${item.is_verified
